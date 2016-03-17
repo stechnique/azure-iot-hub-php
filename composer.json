@@ -1,0 +1,21 @@
+{
+    "name": "tomconte/azure-iot-hub",
+    "autoload": {
+        "psr-0" : {
+            "AzureIoTHub" : "src"
+        }
+    },
+    "description": "Simple library to send data to Azure IoT Hub",
+    "require": {
+        "guzzlehttp/guzzle": "^6.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.0.*"
+    },
+    "authors": [
+        {
+            "name": "Thomas Conté",
+            "email": "thomas@conte.com"
+        }
+    ]
+}
