@@ -13,14 +13,25 @@ use AzureIoTHub;
 
 class IoTHubClientTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSend()
+    public function testSendEvent()
     {
         $host = 'hubbhub.azure-devices.net';
         $deviceId = 'php_device';
         $deviceKey = 'xxxx';
 
         $client = new DeviceClient($host, $deviceId, $deviceKey);
-        $response = $client->send('Hello World!');
+        $response = $client->sendEvent('Hello World!');
+
+        // Response code should be 204 if the message was accepted
+        $this->assertEquals($response->getStatusCode(), 204);
+    }
+
+    public function testSendEventWithConnectionString()
+    {
+        $connectionString = 'HostName=hubbhub.azure-devices.net;DeviceId=php_device;SharedAccessKey=xxxx';
+
+        $client = new DeviceClient($connectionString);
+        $response = $client->sendEvent('Hello World!');
 
         // Response code should be 204 if the message was accepted
         $this->assertEquals($response->getStatusCode(), 204);

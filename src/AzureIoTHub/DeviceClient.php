@@ -15,13 +15,52 @@ class DeviceClient
     private $host, $deviceId, $deviceKey, $SAS;
 
     /**
-     * IoTHubClient constructor.
+     * DeviceClient constructor.
+     */
+    function __construct()
+    {
+        $a = func_get_args();
+        $i = func_num_args();
+        if (method_exists($this, $f='__construct'.$i)) {
+            call_user_func_array(array($this, $f), $a);
+        }
+    }
+
+    /**
+     * DeviceClient constructor.
+     *
+     * @param string $connectionString the Azure IoT Hub device connection string
+     */
+    function __construct1($connectionString)
+    {
+        $elements = explode(';', $connectionString);
+
+        foreach ($elements as $element) {
+            $e = explode('=', $element);
+            switch ($e[0]) {
+                case 'HostName':
+                    $host = $e[1];
+                    break;
+                case 'DeviceId':
+                    $deviceId = $e[1];
+                    break;
+                case 'SharedAccessKey':
+                    $deviceKey = $e[1];
+                    break;
+            }
+        }
+
+        $this->__construct3($host, $deviceId, $deviceKey);
+    }
+
+    /**
+     * DeviceClient constructor.
      *
      * @param string $host the Azure IoT Hub full host name
      * @param string $deviceId the device identifier
      * @param string $deviceKey one of the device secret keys
      */
-    function __construct($host, $deviceId, $deviceKey)
+    function __construct3($host, $deviceId, $deviceKey)
     {
         $this->host = $host;
         $this->deviceId = $deviceId;
@@ -40,7 +79,7 @@ class DeviceClient
      * @param $data
      * @return mixed|\Psr\Http\Message\ResponseInterface
      */
-    function send($data)
+    function sendEvent($data)
     {
         $uri = '/devices/' . $this->deviceId . '/messages/events?api-version=2016-02-03';
         $client = new Client([
