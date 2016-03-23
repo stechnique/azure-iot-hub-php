@@ -10,7 +10,7 @@ namespace AzureIoTHub;
 
 use GuzzleHttp\Client;
 
-class IoTHubClient
+class DeviceClient
 {
     private $host, $deviceId, $deviceKey, $SAS;
 
@@ -40,7 +40,7 @@ class IoTHubClient
      * @param $data
      * @return mixed|\Psr\Http\Message\ResponseInterface
      */
-    function Send($data)
+    function send($data)
     {
         $uri = '/devices/' . $this->deviceId . '/messages/events?api-version=2016-02-03';
         $client = new Client([

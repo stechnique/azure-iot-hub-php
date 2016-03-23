@@ -15,12 +15,12 @@ class IoTHubClientTest extends \PHPUnit_Framework_TestCase
 {
     public function testSend()
     {
-        $host = 'tcontehub.azure-devices.net';
-        $deviceId = 'power_lawyer';
-        $deviceKey = 'dJ2tReWUTOpBrzBzvJH8Uj6CCWv7FVtO1ZN7LvwwjCA=';
+        $host = 'hubbhub.azure-devices.net';
+        $deviceId = 'php_device';
+        $deviceKey = 'xxxx';
 
-        $client = new IoTHubClient($host, $deviceId, $deviceKey);
-        $response = $client->Send('Hello World!');
+        $client = new DeviceClient($host, $deviceId, $deviceKey);
+        $response = $client->send('Hello World!');
 
         // Response code should be 204 if the message was accepted
         $this->assertEquals($response->getStatusCode(), 204);
