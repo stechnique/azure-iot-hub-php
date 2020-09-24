@@ -83,10 +83,10 @@ class DeviceClient
     {
         $uri = '/devices/' . $this->deviceId . '/messages/events?api-version=2016-02-03';
         $client = new Client([
-            'base_uri' => 'https://' . $this->host
+            'base_url' => 'https://' . $this->host
         ]);
 
-        $response = $client->request('POST', $uri, [
+        $response = $client->post($uri, [
             'body' => $data,
             'headers' => [
                 'Authorization' => $this->SAS,
