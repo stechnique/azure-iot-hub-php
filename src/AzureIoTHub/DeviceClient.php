@@ -9,6 +9,7 @@
 namespace AzureIoTHub;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Pool;
 
 class DeviceClient
 {
@@ -95,6 +96,29 @@ class DeviceClient
                 'Authorization' => $this->SAS,
             ]
         ]);
+
+        return $response;
+    }
+    
+    /**
+     * Send some data to the IoT Hub.
+     *
+     * @param $data
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
+    function sendEventsBatch($payloads)
+    {
+        $requests = [];
+        $uri = '/devices/' . $this->deviceId . '/messages/events?api-version=2016-02-03';
+        foreach($payloads as $data){
+            $requests[] = $client->createRequest('POST', $uri, [
+                'body' => $data,
+                'headers' => [
+                    'Authorization' => $this->SAS,
+                ]
+            );
+        }
+        $response = Pool::batch($client, $requests);
 
         return $response;
     }
