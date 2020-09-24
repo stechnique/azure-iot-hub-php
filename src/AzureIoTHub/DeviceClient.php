@@ -116,7 +116,7 @@ class DeviceClient
                 'headers' => [
                     'Authorization' => $this->SAS,
                 ]
-            );
+            ]);
         }
         $response = Pool::batch($client, $requests);
 
