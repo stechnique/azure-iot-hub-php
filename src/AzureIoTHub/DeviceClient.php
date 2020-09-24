@@ -12,7 +12,7 @@ use GuzzleHttp\Client;
 
 class DeviceClient
 {
-    private $host, $deviceId, $deviceKey, $SAS;
+    private $host, $deviceId, $deviceKey, $SAS, $client;
 
     /**
      * DeviceClient constructor.
@@ -23,6 +23,7 @@ class DeviceClient
         $i = func_num_args();
         if (method_exists($this, $f='__construct'.$i)) {
             call_user_func_array(array($this, $f), $a);
+            $this->createClient();
         }
     }
 
@@ -72,6 +73,12 @@ class DeviceClient
         // Compute the SAS
         $this->SAS = $this->computeSAS($resourceURI, $this->deviceKey, $expiry);
     }
+    
+    function createClient(){
+        $this->client = new Client([
+            'base_url' => 'https://' . $this->host
+        ]);
+    }
 
     /**
      * Send some data to the IoT Hub.
@@ -82,11 +89,7 @@ class DeviceClient
     function sendEvent($data)
     {
         $uri = '/devices/' . $this->deviceId . '/messages/events?api-version=2016-02-03';
-        $client = new Client([
-            'base_url' => 'https://' . $this->host
-        ]);
-
-        $response = $client->post($uri, [
+        $response = $this->client->post($uri, [
             'body' => $data,
             'headers' => [
                 'Authorization' => $this->SAS,
