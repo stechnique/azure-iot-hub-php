@@ -111,14 +111,14 @@ class DeviceClient
         $requests = [];
         $uri = '/devices/' . $this->deviceId . '/messages/events?api-version=2016-02-03';
         foreach($payloads as $data){
-            $requests[] = $client->createRequest('POST', $uri, [
+            $requests[] = $this->client->createRequest('POST', $uri, [
                 'body' => $data,
                 'headers' => [
                     'Authorization' => $this->SAS,
                 ]
             ]);
         }
-        $response = Pool::batch($client, $requests);
+        $response = Pool::batch($this->client, $requests);
 
         return $response;
     }
