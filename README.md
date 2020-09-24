@@ -1,17 +1,17 @@
 # A PHP library to send data to Azure IoT Hub
 
-Currently the library is [hosted on my GitHub account](https://github.com/tomconte/azure-iot-hub-php), so in order to use it, your `composer.json` file should contain something like this:
+Currently the library is [hosted on my GitHub account](https://github.com/stechnique/azure-iot-hub-php), so in order to use it, your `composer.json` file should contain something like this:
 
 ~~~ json
 {
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/tomconte/azure-iot-hub-php"
+            "url": "https://github.com/stechnique/azure-iot-hub-php"
         }
     ],
     "require": {
-        "tomconte/azure-iot-hub": "dev-master"
+        "stechnique/azure-iot-hub": "dev-master"
     }
 }
 ~~~
@@ -43,7 +43,7 @@ $connectionString = 'HostName=hubbhub.azure-devices.net;DeviceId=php_device;Shar
 $client = new DeviceClient($connectionString);
 ~~~
 
-The `sendEvent()` method will open an HTTPS connection and send a single message. There is currently no provision to reuse the connection, since in PHP, objects are typically short-lived.
+This fork from Tom Conté's repo was made to rely on an older version of Guzzle (5.3) for our specific use case and requirements. You should use the original library if you can use Guzzle 6. However, in this version the Guzzle client is reused for subsequent events. Our use case is to open a connection and burst a few messages before disconnecting. 
 
 Please note that as with all IoT Hub libraries, your secret key is never sent on the wire. The library will compute a Shared Access Signature (SAS) token and use it to authenticate the communication; you can look at the `computeSAS()` function in the source code to see how this is done.
 
