@@ -77,7 +77,10 @@ class DeviceClient
     
     function createClient(){
         $this->client = new Client([
-            'base_url' => 'https://' . $this->host
+            'base_url' => 'https://' . $this->host,
+            'curl' => array(
+                CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2
+            )
         ]);
     }
 
