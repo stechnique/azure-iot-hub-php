@@ -78,6 +78,7 @@ class DeviceClient
     function createClient(){
         $this->client = new Client([
             'base_url' => 'https://' . $this->host,
+            'base_uri' => 'https://' . $this->host,
             'curl' => array(
                 CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2
             )
@@ -93,7 +94,7 @@ class DeviceClient
     function sendEvent($data)
     {
         $uri = '/devices/' . $this->deviceId . '/messages/events?api-version=2016-02-03';
-        $response = $this->client->post($uri, [
+        $response = $this->client->request('POST', $uri, [
             'body' => $data,
             'headers' => [
                 'Authorization' => $this->SAS,
