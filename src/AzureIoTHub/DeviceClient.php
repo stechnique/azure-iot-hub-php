@@ -112,16 +112,16 @@ class DeviceClient
      */
     function sendEventsBatch($payloads)
     {
-        $requests = [];
-        $uri = '/devices/' . $this->deviceId . '/messages/events?api-version=2016-02-03';
-        foreach($payloads as $data){
-            $requests[] = $this->client->createRequest('POST', $uri, [
-                'body' => $data,
-                'headers' => [
+
+        $requests = function () use ($payloads) {
+            $uri = '/devices/' . $this->deviceId . '/messages/events?api-version=2016-02-03';
+            foreach ($payloads as $data) {
+                yield new \GuzzleHttp\Psr7\Request('POST', $uri, [
                     'Authorization' => $this->SAS,
-                ]
-            ]);
-        }
+                ], $data);
+            }
+        };
+
         $response = Pool::batch($this->client, $requests);
 
         return $response;
