@@ -10,6 +10,7 @@ namespace AzureIoTHub;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
+use GuzzleHttp\Psr7\Request;
 
 class DeviceClient
 {
@@ -116,15 +117,28 @@ class DeviceClient
         $requests = function () use ($payloads) {
             $uri = '/devices/' . $this->deviceId . '/messages/events?api-version=2016-02-03';
             foreach ($payloads as $data) {
-                yield new \GuzzleHttp\Psr7\Request('POST', $uri, [
+                yield new Request('POST', $uri, [
                     'Authorization' => $this->SAS,
                 ], $data);
             }
         };
 
-        $response = Pool::batch($this->client, $requests);
+        $pool = new Pool($this->client, $requests(), [
+            'concurrency' => 10, // Adjust concurrency level as needed
+            'fulfilled' => function ($response, $index) {
+                // This is called when a request is successful
+                // Handle successful response
+            },
+            'rejected' => function (RequestException $reason, $index) {
+                \Log::error('IoT Hub request failed: ' . $reason->getMessage());
+            },
+        ]);
 
-        return $response;
+        // Initiate the transfers and create a promise
+        $promise = $pool->promise();
+
+        // Force the pool of requests to complete
+        $promise->wait();
     }
 
     /**
